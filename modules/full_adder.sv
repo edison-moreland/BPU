@@ -1,4 +1,4 @@
-module fulladd (  input [3:0] a,
+module full_adder (  input [3:0] a,
                   input [3:0] b,
                   input c_in,
                   output c_out,
