@@ -6,8 +6,8 @@
     <s:layoutEngine
       org.eclipse.elk.layered.spacing.nodeNodeBetweenLayers="10"
       org.eclipse.elk.spacing.nodeNode= "10"
-      org.eclipse.elk.layered.layering.strategy= "LONGEST_PATH"
-      org.eclipse.elk.graphviz.concentrate= "true"
+      org.eclipse.elk.layered.layering.strategy= "LONGEST_PATH_SOURCE"
+      org.eclipse.elk.alg.libavoid.crossingPenalty= "100"
     />
     <s:low_priority_alias val="$dff" />
   </s:properties>
