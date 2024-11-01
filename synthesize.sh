@@ -19,8 +19,9 @@ mkdir -p "${OUTPUT_DIR}"
 sv2v -w "${OUTPUT_DIR}" "${MODULES_DIR}/${MODULE}.sv"
 yosys -o "${OUTPUT_DIR}/${MODULE}.json" -S "${OUTPUT_DIR}/${MODULE}.v" \
     -p 'prep -auto-top -flatten' \
+    -p 'abc -g AND,XOR,OR; opt -full' \
+    -p 'freduce -inv; opt -full' \
     -p "techmap -autoproc -map ${TECHMAPS_DIR}/ff2latch.v; opt_merge" \
-    -p 'abc -g AND,XOR,OR' \
     -p 'dfflegalize -cell $_DLATCH_P_ 0' \
 
 # TODO: Elk layout file to increase readibility?
