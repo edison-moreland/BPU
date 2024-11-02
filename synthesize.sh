@@ -23,9 +23,10 @@ sv2v -w "${OUTPUT_DIR}" "${MODULES_DIR}/${MODULE}.sv"
 yosys -o "${OUTPUT_DIR}/${MODULE}.json" -S "${OUTPUT_DIR}/${MODULE}.v" \
     -p 'prep -auto-top -flatten' \
     -p 'abc -g OR,NOR,NAND,XOR,XNOR; opt -full' \
-    -p 'freduce -inv; opt -full' \
+    -p 'dfflegalize -cell $_DLATCH_P_ 0 -cell $_DFF_P_ 0' \
     -p "techmap -autoproc -map ${TECHMAPS_DIR}/ff2latch.v; opt_merge" \
-    -p 'dfflegalize -cell $_DLATCH_P_ 0' \
+    -p 'abc -g OR,NOR,NAND,XOR,XNOR' \
+    # -p 'freduce -inv; opt -full' \
     # -p 'abc -liberty logicworld.lib'\
     # -p 'read_liberty -lib logicworld.lib'\
     # -p "dfflibmap -liberty logicworld.lib"\
