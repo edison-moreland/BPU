@@ -1,8 +1,8 @@
-module full_adder (  input [3:0] a,
-                  input [3:0] b,
-                  input c_in,
-                  output c_out,
-                  output [3:0] sum);
+module full_adder #(parameter N = 1)
+                   (input  logic [N-1:0] a, b,
+                    input  logic         cin,
+                    output logic [N-1:0] s,
+                    output logic         cout);
 
-   assign {c_out, sum} = a + b + c_in;
+   assign {cout, s} = a + b + cin;
 endmodule
