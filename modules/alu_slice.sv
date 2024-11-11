@@ -1,16 +1,16 @@
-module alu_logic_slice (
+module alu_slice (
     input  logic a, b,
     input  logic prev_eq, prev_greater,
     output logic result_xor,
     output logic result_or,
     output logic result_and,
     output logic result_not,
-    output logic is_eq, is_greater
+    output logic eq, greater,
 );
 
     always @* begin
-        is_eq <= (a == b) & prev_eq;
-        is_greater <= ((a > b) & prev_eq) | prev_greater;
+        eq <= (a == b) & prev_eq;
+        greater <= ((a > b) & prev_eq) | prev_greater;
 
         result_xor <= a ^ b;
         result_or <= a | b;
