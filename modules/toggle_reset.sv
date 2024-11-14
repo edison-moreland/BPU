@@ -1,3 +1,5 @@
+//visualization: netlistsvg
+
 module toggle_reset(
     input  logic t, r,
     output logic q,
