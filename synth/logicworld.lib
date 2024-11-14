@@ -1,0 +1,261 @@
+library(logicworld) {
+    technology (logicworld);
+    delay_model: generic_cmos;
+
+	/* unit attributes */
+	time_unit						: "1ns";
+	voltage_unit					: "1V";
+	current_unit					: "1uA";
+	pulling_resistance_unit			: "1kohm";
+	leakage_power_unit				: "1nW";
+	capacitive_load_unit (1,pf);
+
+	/* Default Attributes */
+	default_intrinsic_fall			: 1;
+	default_inout_pin_fall_res		: 1;
+	default_fanout_load				: 1;
+	default_intrinsic_rise			: 1;
+	default_slope_rise				: 1;
+	default_output_pin_fall_res		: 1;
+	default_inout_pin_cap			: 1;
+	default_input_pin_cap			: 1;
+	default_slope_fall				: 1;
+	default_inout_pin_rise_res		: 1;
+	default_output_pin_cap			: 1;
+	default_output_pin_rise_res		: 1;
+
+
+	/* Threshold definitions */
+	slew_derate_from_library		: 0.0;
+	slew_lower_threshold_pct_fall	: 50.0;
+	slew_upper_threshold_pct_fall	: 50.0;
+	slew_lower_threshold_pct_rise	: 50.0;
+	slew_upper_threshold_pct_rise	: 50.0;
+
+	output_threshold_pct_fall		: 50.0;
+	input_threshold_pct_fall		: 50.0;
+	output_threshold_pct_rise		: 50.0;
+	input_threshold_pct_rise		: 50.0;
+
+
+    cell(BUF) {
+        area: 1;
+        pin(A) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(Y) {
+            direction: output;
+            function: "A";
+        }
+    }
+    cell(NOT) {
+        area: 1;
+        pin(A) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(Y) {
+            direction: output;
+            function: "A'";
+        }
+    }
+    cell(AND) {
+        area: 1;
+        pin(A) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(B) {
+            direction : input;
+            capacitance : 0;
+        }
+        pin(Y) {
+            direction: output;
+            function: "A*B";
+        }
+    }
+    cell(AND3) {
+        area: 1.5;
+        pin(A) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(B) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(C) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(Y) {
+            direction: output;
+            function: "A*B*C";
+        }
+    }
+    cell(AND4) {
+        area: 2;
+        pin(A) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(B) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(C) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(D) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(Y) {
+            direction: output;
+            function: "A*B*C*D";
+        }
+    }
+    cell(NAND) {
+        area: 1;
+        pin(A) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(B) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(Y) {
+            direction: output;
+            function: "(A*B)'";
+        }
+    }
+    cell(NOR) {
+        area: 1;
+        pin(A) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(B) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(Y) {
+            direction: output;
+            function: "(A+B)'";
+        }
+    }
+    cell(OR) {
+        area: .5;
+        pin(A) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(B) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(Y) {
+            direction: output;
+            function: "A+B";
+        }
+    }
+    cell(OR3) {
+        area: .5;
+        pin(A) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(B) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(C) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(Y) {
+            direction: output;
+            function: "A+B+C";
+        }
+    }
+
+    cell(OR4) {
+        area: .5;
+        pin(A) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(B) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(C) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(D) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(Y) {
+            direction: output;
+            function: "A+B+C+D";
+        }
+    }
+
+    cell(XOR) {
+        area: 1;
+        pin(A) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(B) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(Y) {
+            direction: output;
+            function: "A^B";
+        }
+    }
+
+    cell(XNOR) {
+        area: 1;
+        pin(A) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(B) {
+            direction: input;
+            capacitance: 0;
+        }
+        pin(Y) {
+            direction: output;
+            function: "(A^B)'";
+        }
+    }
+
+    cell(DLATCH) {
+        area : 2;
+        latch ("IQ") {
+            enable : "E";
+            data_in : "D";
+        }
+
+        pin(D) {
+            direction : input;
+        }
+        pin(E) {
+            direction : input;
+        }
+
+        pin(Q) {
+            direction : output;
+            function : "IQ";
+            internal_node : "Q";
+        }
+    }
+}

@@ -1,8 +1,11 @@
-module full_adder #(parameter N = 1)
-                   (input  logic [N-1:0] a, b,
-                    input  logic         cin,
-                    output logic [N-1:0] s,
-                    output logic         cout);
+module full_adder #(
+   parameter N = 1
+) (
+   input  logic [N-1:0] a, b,
+   input  logic         carry_in,
+   output logic [N-1:0] result,
+   output logic         carry_out,
+);
 
-   assign {cout, s} = a + b + cin;
+   assign {carry_out, result} = a + b + carry_in;
 endmodule

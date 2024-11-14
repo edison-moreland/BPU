@@ -2,32 +2,57 @@
 set -euo pipefail
 
 PROJECT_DIR="$(dirname "$(realpath "$0")")"
-OUTPUT_DIR="${PROJECT_DIR}/.out"
-MODULES_DIR="${PROJECT_DIR}/modules"
-TECHMAPS_DIR="${PROJECT_DIR}/techmaps"
+OUTPUT_DIR="./.out"
+MODULES_DIR="./modules"
 
-NETLIST_SKIN="${PROJECT_DIR}/skin.svg"
-LW_LIBERTY_FILE="${PROJECT_DIR}/logicworld.lib"
+NETLIST_SKIN="./synth/netlistsvg_skin.svg"
+LOGICWORLD_LIBERTY="./synth/logicworld.lib"
+FF_INTO_LATCH_TECHMAP="./synth/ff2latch.v"
 
 MODULE="$1"
+
+. "${PROJECT_DIR}/synth/frontmatter.sh"
 
 # Dependencies
 # Yosys 0.46 (git sha1 e97731b9d, clang++ 16.0.0 -fPIC -O3)
 # netlistsvg
 # sv2v v0.0.12
+# probably gnu awk+grep
 
+pushd "${PROJECT_DIR}"
 mkdir -p "${OUTPUT_DIR}"
 
-sv2v -w "${OUTPUT_DIR}" "${MODULES_DIR}/${MODULE}.sv"
-yosys -o "${OUTPUT_DIR}/${MODULE}.json" -S "${OUTPUT_DIR}/"*.v \
-    -p 'prep -flatten -top '"${MODULE}" \
-    -p 'freduce -inv; opt -full' \
-    -p 'dfflegalize -cell $_DLATCH_P_ 0 -cell $_DFF_P_ 0' \
-    -p "techmap -autoproc -map ${TECHMAPS_DIR}/ff2latch.v; opt_merge" \
-    -p 'read_liberty -lib logicworld.lib'\
-    -p 'abc -liberty logicworld.lib'\
-    # -p "dfflibmap -liberty logicworld.lib"\
+module_file="${MODULES_DIR}/${MODULE}.sv"
+if [[ ! -f "${module_file}" ]]; then
+    echo "Module not found"
+    exit 1
+fi
 
-# TODO: Elk layout file to increase readibility?
-netlistsvg "${OUTPUT_DIR}/${MODULE}.json" -o "${OUTPUT_DIR}/${MODULE}.svg" --skin "${NETLIST_SKIN}"
+sv2v -w "${OUTPUT_DIR}" "${module_file}"
 
+case "$(get_frontmatter_key visualization)" in
+    * | netlistsvg)
+        yosys -o "${OUTPUT_DIR}/${MODULE}.json" -S "${OUTPUT_DIR}/"*.v \
+            -p "prep -flatten -top ${MODULE}" \
+            -p 'freduce -inv; opt -full' \
+            -p 'dfflegalize -cell $_DLATCH_P_ 0 -cell $_DFF_P_ 0 -cell $_DFF_PP0_ 0' \
+            -p "techmap -autoproc -map ${FF_INTO_LATCH_TECHMAP}; opt_merge" \
+            -p "read_liberty -lib ${LOGICWORLD_LIBERTY}"\
+            -p "abc -liberty ${LOGICWORLD_LIBERTY}"\
+
+        # TODO: Elk layout file to increase readibility?
+        netlistsvg "${OUTPUT_DIR}/${MODULE}.json" -o "${OUTPUT_DIR}/${MODULE}.svg" --skin "${NETLIST_SKIN}"
+    ;;
+
+    # netlistsvg-sop)
+    #     #  Sum of products TODO - DOESNT WORK
+    #     yosys -o "${OUTPUT_DIR}/${MODULE}.json" -S "${OUTPUT_DIR}/"*.v -p 'synth -flatten -top '"${MODULE}; abc -sop"
+    #     # yosys-abc  -o "${OUTPUT_DIR}/${MODULE}.sop.blif" "${OUTPUT_DIR}/${MODULE}.blif"
+    #     netlistsvg "${OUTPUT_DIR}/${MODULE}.json" -o "${OUTPUT_DIR}/${MODULE}.svg" --skin "${NETLIST_SKIN}"
+
+    # ;;
+
+esac
+
+
+popd

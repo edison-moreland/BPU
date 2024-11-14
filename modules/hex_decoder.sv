@@ -1,3 +1,4 @@
+//visualization: netlistsvg-sop
 
 // 0 0 0 0 |7'b1111110
 // 0 0 0 1 |7'b0110000
@@ -19,9 +20,8 @@
 module hex_decoder (
         input  logic[0:3] value,
         output logic[0:6] display
-    );
-
-    always @* begin
+);
+  always_comb begin
     unique case (value)
       0  : display <= 7'b1111110;
       1  : display <= 7'b0110000;
@@ -40,5 +40,5 @@ module hex_decoder (
       14 : display <= 7'b1001111;
       15 : display <= 7'b1000111;
     endcase
-    end
+  end
 endmodule
