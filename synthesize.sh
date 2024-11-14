@@ -24,11 +24,17 @@ mkdir -p "${OUTPUT_DIR}"
 
 module_file="${MODULES_DIR}/${MODULE}.sv"
 if [[ ! -f "${module_file}" ]]; then
-    echo "Module not found"
-    exit 1
-fi
 
-sv2v -w "${OUTPUT_DIR}" "${module_file}"
+    module_file="${MODULES_DIR}/${MODULE}.v"
+    if [[ ! -f "${module_file}" ]]; then
+        echo "Module not found"
+        exit 1
+    else
+        cp "${module_file}" "${OUTPUT_DIR}"
+    fi
+else
+    sv2v -w "${OUTPUT_DIR}" "${module_file}"
+fi
 
 case "$(get_frontmatter_key visualization)" in
     * | netlistsvg)
