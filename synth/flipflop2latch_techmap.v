@@ -1,3 +1,4 @@
+// map flip flops into dlatch based implementations
 
 module \$_DLATCH_P_ (D, E, Q);
     wire [1023:0] _TECHMAP_DO_ = "simplemap; opt";

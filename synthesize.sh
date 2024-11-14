@@ -7,7 +7,7 @@ MODULES_DIR="./modules"
 
 NETLIST_SKIN="./synth/netlistsvg_skin.svg"
 LOGICWORLD_LIBERTY="./synth/logicworld.lib"
-FF_INTO_LATCH_TECHMAP="./synth/ff2latch.v"
+FF_INTO_LATCH_TECHMAP="./synth/flipflop2latch_techmap.v"
 
 MODULE="$1"
 
