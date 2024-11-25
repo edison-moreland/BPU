@@ -117,18 +117,76 @@ func Test_parseInstruction(t *testing.T) {
 			wantImmByte:     -1,
 			wantImmLabel:    "",
 		},
+		{
+			line:            "PSEL R3",
+			wantInstruction: 0b1111_1110,
+			wantImmByte:     -1,
+			wantImmLabel:    "",
+		},
+		{
+			line:            "PIN R2",
+			wantInstruction: 0b1000_1110,
+			wantImmByte:     -1,
+			wantImmLabel:    "",
+		},
+		{
+			line:            "POUT R1",
+			wantInstruction: 0b0101_1110,
+			wantImmByte:     -1,
+			wantImmLabel:    "",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.line, func(t *testing.T) {
 			gotInstruction, gotImmediateByte, gotImmediateLabel := parseInstruction(tt.line)
 			if gotInstruction != tt.wantInstruction {
-				t.Errorf("parseInstruction() gotInstruction = %08b, want %08b", gotInstruction, tt.wantInstruction)
+				t.Errorf("parseInstruction() gotInstruction = %08b, wantImm %08b", gotInstruction, tt.wantInstruction)
 			}
 			if gotImmediateByte != tt.wantImmByte {
-				t.Errorf("parseInstruction() gotImmediateByte = %v, want %v", gotImmediateByte, tt.wantImmByte)
+				t.Errorf("parseInstruction() gotImmediateByte = %v, wantImm %v", gotImmediateByte, tt.wantImmByte)
 			}
 			if gotImmediateLabel != tt.wantImmLabel {
-				t.Errorf("parseInstruction() gotImmediateLabel = %v, want %v", gotImmediateLabel, tt.wantImmLabel)
+				t.Errorf("parseInstruction() gotImmediateLabel = %v, wantImm %v", gotImmediateLabel, tt.wantImmLabel)
+			}
+		})
+	}
+}
+
+func Test_immediateArg(t *testing.T) {
+	tests := []struct {
+		arg       string
+		wantImm   int
+		wantLabel string
+	}{
+		{
+			arg:       "100",
+			wantImm:   100,
+			wantLabel: "",
+		},
+		{
+			arg:       "0b1001_0110",
+			wantImm:   0b1001_0110,
+			wantLabel: "",
+		},
+		{
+			arg:       "0x84",
+			wantImm:   0x84,
+			wantLabel: "",
+		},
+		{
+			arg:       ":label",
+			wantImm:   -1,
+			wantLabel: "label",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.arg, func(t *testing.T) {
+			gotImm, gotLabel := immediateArg(tt.arg)
+			if gotImm != tt.wantImm {
+				t.Errorf("immediateArg() gotImm = %v, wantImm %v", gotImm, tt.wantImm)
+			}
+			if gotLabel != tt.wantLabel {
+				t.Errorf("immediateArg() gotLabel = %v, wantImm %v", gotLabel, tt.wantLabel)
 			}
 		})
 	}

@@ -10,6 +10,7 @@ LOGICWORLD_LIBERTY="./synth/logicworld.lib"
 FF_INTO_LATCH_TECHMAP="./synth/flipflop2latch_techmap.v"
 
 MODULE="$1"
+MODULE_NAME="$(basename "${MODULE}")"
 
 . "${PROJECT_DIR}/synth/frontmatter.sh"
 
@@ -38,16 +39,16 @@ fi
 
 case "$(get_frontmatter_key visualization)" in
     * | netlistsvg)
-        yosys -o "${OUTPUT_DIR}/${MODULE}.json" -S "${OUTPUT_DIR}/"*.v \
-            -p "prep -flatten -top ${MODULE}" \
-            -p 'freduce -inv; opt -full' \
-            -p 'dfflegalize -cell $_DLATCH_P_ 0 -cell $_DFF_P_ 0 -cell $_DFF_PP0_ 0' \
+        yosys -o "${OUTPUT_DIR}/${MODULE_NAME}.json" -S "${OUTPUT_DIR}/"*.v \
+            -p "prep -flatten -top ${MODULE_NAME}" \
+            -p 'dfflegalize -cell $_DLATCH_P_ 0 -cell $_DFF_P_ 0 -cell $_DFF_PP0_ 0 -cell $_ALDFF_PP_ 0' \
             -p "techmap -autoproc -map ${FF_INTO_LATCH_TECHMAP}; opt_merge" \
+            -p 'freduce -inv; opt -full' \
             -p "read_liberty -lib ${LOGICWORLD_LIBERTY}"\
-            -p "abc -liberty ${LOGICWORLD_LIBERTY}"\
+            -p "abc -liberty ${LOGICWORLD_LIBERTY}; opt_clean"\
 
         # TODO: Elk layout file to increase readibility?
-        netlistsvg "${OUTPUT_DIR}/${MODULE}.json" -o "${OUTPUT_DIR}/${MODULE}.svg" --skin "${NETLIST_SKIN}"
+        netlistsvg "${OUTPUT_DIR}/${MODULE_NAME}.json" -o "${OUTPUT_DIR}/${MODULE_NAME}.svg" --skin "${NETLIST_SKIN}"
     ;;
 
     # netlistsvg-sop)

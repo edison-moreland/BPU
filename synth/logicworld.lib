@@ -162,7 +162,7 @@ library(logicworld) {
             function: "A+B";
         }
     }
-    /*cell(OR3) {
+    cell(OR3) {
         area: .5;
         pin(A) {
             direction: input;
@@ -204,7 +204,7 @@ library(logicworld) {
             direction: output;
             function: "A+B+C+D";
         }
-    }*/
+    }
 
     cell(XOR) {
         area: 1;

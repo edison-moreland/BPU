@@ -163,6 +163,13 @@ func parseInstruction(line string) (instruction byte, immediateByte int, immedia
 		instruction, immediateByte, immediateLabel = jumpImmInstruction(args)
 	case "CLF":
 		instruction = 0b0000_1100
+	case "PSEL":
+		instruction = peripheralBusInstruction(output, address, args)
+	case "PIN":
+		instruction = peripheralBusInstruction(input, data, args)
+	case "POUT":
+		instruction = peripheralBusInstruction(output, data, args)
+
 	default:
 		if len(op) > 1 && op[0] == 'J' && matchCondFlags.MatchString(op[1:]) {
 			conditionFlags := op[1:]
@@ -265,6 +272,38 @@ func jumpConditionalInstruction(flags string, args []string) (byte, int, string)
 	return inst, immByte, immLabel
 }
 
+type pbusDirection bool
+
+const (
+	input  pbusDirection = false
+	output pbusDirection = true
+)
+
+type pbusKind bool
+
+const (
+	data    pbusKind = false
+	address pbusKind = true
+)
+
+func peripheralBusInstruction(direction pbusDirection, kind pbusKind, args []string) byte {
+	if len(args) != 1 {
+		exitE(fmt.Errorf("peripheral op should have 1 argument"))
+	}
+
+	regB := registerArg(args[0])
+
+	inst := 0b0000_1110 | (regB << 6)
+	if direction == output {
+		inst |= 0b0001_0000
+	}
+	if kind == address {
+		inst |= 0b0010_0000
+	}
+
+	return inst
+}
+
 func registerArg(arg string) byte {
 	if len(arg) != 2 || arg[0] != 'R' {
 		exitE(fmt.Errorf("unknown register: %s", arg))
@@ -285,10 +324,10 @@ func immediateArg(arg string) (int, string) {
 	}
 
 	// Arg is a literal
-	imm, err := strconv.Atoi(arg)
+	imm, err := strconv.ParseUint(arg, 0, 8)
 	if err != nil {
 		exitE(fmt.Errorf("immediate must be label or decimal value: %s", arg))
 	}
 
-	return imm, ""
+	return int(imm), ""
 }
