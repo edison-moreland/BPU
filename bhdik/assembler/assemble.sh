@@ -4,4 +4,4 @@ set -euo pipefail
 
 ASSEMBLER_DIR="$(dirname "$(realpath "$0")")"
 
-go run "${ASSEMBLER_DIR}" <(m4 "${@}")
+go run -C "${ASSEMBLER_DIR}/" . <(m4 "${@}")

@@ -1,4 +1,4 @@
-module sr_latch(
+module srlatch(
     input  logic s, r,
     output logic q,
 );

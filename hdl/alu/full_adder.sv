@@ -1,5 +1,5 @@
 module full_adder #(
-   parameter N = 8
+   parameter N = 4
 ) (
    input  logic [N-1:0] a, b,
    input  logic         carry_in,

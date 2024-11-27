@@ -42,3 +42,13 @@ module \$_ALDFF_PP_ (D, C, L, AD, Q);
     DLATCH DLP2(.E(CC), .D(QQ), .Q(Q));
 
 endmodule
+
+module \$_SR_PP_ (S, R, Q);
+    wire [1023:0] _TECHMAP_DO_ = "simplemap; opt";
+    input S, R;
+    output Q;
+    wire QQ;
+
+    DLATCH DLP1(.E(~S), .D(1), .Q(QQ));
+    DLATCH DLP2(.E(R | S), .D(QQ & ~R), .Q(Q));
+endmodule

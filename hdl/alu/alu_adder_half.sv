@@ -19,8 +19,6 @@ module alu_adder_half (
     );
 
     always_comb begin
-
-
         if (enable)
             result <= internal_result;
         else
