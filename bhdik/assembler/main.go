@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -28,6 +29,8 @@ func main() {
 	}
 
 	program := []byte{}
+	programOffset := 0
+
 	labelLocation := map[string]int{} // Program location of each label
 	labelUses := map[string][]int{}   // Program location where each label is used
 
@@ -58,6 +61,25 @@ func main() {
 
 			hasLabel = true
 			continue
+		case '%':
+			// Assembler directive
+			directive := line[1:]
+			directive, args := parseInstruction(directive)
+
+			switch directive {
+			case "OFFSET":
+				if len(args) != 1 {
+					exitE(errors.New("OFFSET directive requires one argument"))
+				}
+				offset, _ := immediateArg(args[0])
+				if offset > 0xFF {
+					exitE(fmt.Errorf("OFFSET too large: %d", offset))
+				}
+
+				programOffset = offset
+			}
+
+			continue
 		}
 
 		// This line must be an instruction
@@ -68,7 +90,8 @@ func main() {
 			hasLabel = false
 		}
 
-		instruction, immByte, immLabel := parseInstruction(line)
+		opcode, args := parseInstruction(line)
+		instruction, immByte, immLabel := encodeInstruction(opcode, args)
 
 		program = append(program, instruction)
 
@@ -97,6 +120,11 @@ func main() {
 			exitE(fmt.Errorf("label with no destination: %s", name))
 		}
 
+		location += programOffset
+		if location >= 0xFF {
+			warn(fmt.Sprintf("label destination overflows address space after offset: %s", name))
+		}
+
 		usages := labelUses[name]
 		if len(usages) == 0 {
 			warn(fmt.Sprintf("unused label: %s", name))
@@ -112,18 +140,12 @@ func main() {
 	fmt.Println("---")
 	fmt.Println("Address         | Data")
 	for i, b := range program {
-		fmt.Printf("0x%02x 0b%08b | 0x%02x 0b%08b\n", i, i, b, b)
+		fmt.Printf("0x%02x 0b%08b | 0x%02x 0b%08b\n", i+programOffset, i+programOffset, b, b)
 	}
 }
 
-var matchCondFlags = regexp.MustCompile(`[ZCEG]{1,4}`)
-
 // Parse line into an encoded instruction and possibly an immediate byte or label
-func parseInstruction(line string) (instruction byte, immediateByte int, immediateLabel string) {
-	instruction = 0
-	immediateByte = -1
-	immediateLabel = ""
-
+func parseInstruction(line string) (string, []string) {
 	op, rawArgs, hasArgs := strings.Cut(line, " ")
 	var args []string
 	if hasArgs {
@@ -134,7 +156,17 @@ func parseInstruction(line string) (instruction byte, immediateByte int, immedia
 		}
 	}
 
-	switch op {
+	return op, args
+}
+
+var matchCondFlags = regexp.MustCompile(`[ZCEG]{1,4}`)
+
+func encodeInstruction(opcode string, args []string) (byte, int, string) {
+	instruction := byte(0)
+	immediateByte := -1
+	immediateLabel := ""
+
+	switch opcode {
 	case "ADD":
 		instruction = aluInstruction(0b000, args)
 	case "SHR":
@@ -171,11 +203,11 @@ func parseInstruction(line string) (instruction byte, immediateByte int, immedia
 		instruction = peripheralBusInstruction(output, data, args)
 
 	default:
-		if len(op) > 1 && op[0] == 'J' && matchCondFlags.MatchString(op[1:]) {
-			conditionFlags := op[1:]
+		if len(opcode) > 1 && opcode[0] == 'J' && matchCondFlags.MatchString(opcode[1:]) {
+			conditionFlags := opcode[1:]
 			instruction, immediateByte, immediateLabel = jumpConditionalInstruction(conditionFlags, args)
 		} else {
-			exitE(fmt.Errorf("invalid instruction: %s", op))
+			exitE(fmt.Errorf("invalid instruction: %s", opcode))
 		}
 	}
 
