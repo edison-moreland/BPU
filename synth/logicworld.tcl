@@ -15,7 +15,13 @@ namespace eval ::LW {
         variable memoryTechamp [file join $synthDir "flipflop2latch_techmap.v"]
         variable abcTechmap [file join $synthDir "abc_techmap.m4"]
 
-        variable legalDffs { $_DLATCH_P_ $_DFF_P_ $_DFF_PP0_ $_ALDFF_PP_ $_SR_PP_ }
+        variable legalDffs {
+            $_DLATCH_P_
+            $_DFF_P_
+            $_ALDFF_PP_
+            $_SR_PP_
+            $_DFF_PP0_
+        }
 
         variable netlistsvgSkin [file join $synthDir "netlistsvg_skin.svg"]
     }
@@ -111,7 +117,7 @@ namespace eval ::LW {
         abc -script $techmapScript -liberty $v::logicworldLib
         opt_clean
 
-        write_json -compat-int $outputFile
+        write_json $outputFile
     }
 
     proc prepareTechmapScript {insertBuffers} {
