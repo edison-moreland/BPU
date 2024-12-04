@@ -39,8 +39,8 @@ namespace eval ::LW {
             set vdir [file join $verilogOutput ./[file dirname [textutil::trimPrefix $vfile $v::targetDir]]]
             set vfileOutput [file normalize [file join "$vdir" "./${vfilename}.v"]]
 
-            if {[file exists $svdir] != 1} {
-                file mkdir $svdir
+            if {[file exists $vdir] != 1} {
+                file mkdir $vdir
             }
 
             file copy -force $vfile $vfileOutput
@@ -65,9 +65,10 @@ namespace eval ::LW {
     set withoutBuffers 0
     set withBuffers 1
 
-    proc generateGateSchematic {insertBuffers moduleName { moduleParameters {{}}}} {
+    proc generateModuleSchematic {moduleName { moduleParameters {{}} }} {
         yosys read -vlog2k [dict get $v::sourceFiles $moduleName]
         yosys design -stash $moduleName
+
 
         foreach parameterSet $moduleParameters {
             yosys design -load $moduleName
@@ -78,29 +79,64 @@ namespace eval ::LW {
                 set outputName "${outputName}_$key$value"
             }
 
-            set netlistOutputDir [file join $v::outputDir "netlists"]
-            if {[file exists $netlistOutputDir] != 1} {
-                file mkdir $netlistOutputDir
-            }
-            set netlistOutput [file join $netlistOutputDir "${outputName}.json"]
-
             # The real magic
-            ::LW::synthToJson $moduleName $insertBuffers $netlistOutput
+            # ::LW::synthToGates $moduleName $insertBuffers $netlistOutput
 
-            set schematicOutputDir [file join $v::outputDir "schematics"]
-            if {[file exists $schematicOutputDir] != 1} {
-                file mkdir $schematicOutputDir
-            }
-            set schematicOutput [file join $schematicOutputDir "${outputName}.svg"]
+            # set netlistOutput [::LW::outputPath "netlists" "${outputName}.json"]
+            # write_json $netlistOutput
+            hierarchy -top $outputName
+            yosys proc
+            clean
+            opt
 
-            exec netlistsvg $netlistOutput -o $schematicOutput --skin $v::netlistsvgSkin
+            set schematicOutput [::LW::outputPath "schematics" "${outputName}"]
+            show -format svg -prefix $schematicOutput $outputName
+
+            # exec netlistsvg $netlistOutput -o $schematicOutput --skin $v::netlistsvgSkin
         }
-
     }
 
-    proc synthToJson { moduleName insertBuffers outputFile } {
-        set techmapScript [::LW::prepareTechmapScript $insertBuffers]
+    proc generateGateSchematic {  { moduleParameters {} } } {
+        set moduleName [dict get $moduleParameters module]
+        set moduleParams [::LW::dictGetDefault $moduleParameters params {}]
 
+        set insertBuffers [::LW::dictGetDefault $moduleParameters withBuffers 0]
+
+        yosys read -vlog2k [dict get $v::sourceFiles $moduleName]
+        yosys design -stash $moduleName
+
+        set abcScript [::LW::prepareABCScript $insertBuffers]
+
+
+        foreach parameterSet $moduleParams {
+            yosys design -load $moduleName
+
+            set outputName $moduleName
+            dict for { key value } $parameterSet {
+                chparam -set $key $value $moduleName
+                set outputName "${outputName}_$key$value"
+            }
+
+            # The real magic
+            ::LW::synthToGates $moduleName $abcScript
+
+            set netlistOutput [::LW::outputPath "netlists" "${outputName}.json"]
+            write_json $netlistOutput
+
+            set schematicOutput [::LW::outputPath "schematics" "${outputName}.svg"]
+            exec netlistsvg $netlistOutput -o $schematicOutput --skin $v::netlistsvgSkin
+        }
+    }
+
+    proc outputPath { folder filename } {
+        set outputDir [file join $v::outputDir $folder]
+        if {[file exists $outputDir] != 1} {
+            file mkdir $outputDir
+        }
+        return [file join $outputDir $filename]
+    }
+
+    proc synthToGates { moduleName abcScript } {
         read_liberty -lib $v::logicworldLib
 
         # Generic asic synth
@@ -114,13 +150,19 @@ namespace eval ::LW {
 
         # Final opt and techmap
         opt -full
-        abc -script $techmapScript -liberty $v::logicworldLib
+        abc -script $abcScript -liberty $v::logicworldLib
         opt_clean
-
-        write_json $outputFile
     }
 
-    proc prepareTechmapScript {insertBuffers} {
+    proc dictGetDefault { dict key default } {
+        if [dict exists $dict $key] {
+            return [dict get $dict $key]
+        } else {
+            return $default
+        }
+    }
+
+    proc prepareABCScript {insertBuffers} {
         set abcTechmapNew [file join $v::outputDir "../abc_techmap"]
         set defines {}
         if {$insertBuffers == 1} {

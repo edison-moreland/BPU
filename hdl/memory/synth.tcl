@@ -4,7 +4,10 @@ source [file join $::env(SYNTH_DIR) "logicworld.tcl"]
 
 LW::loadVerilogSources
 
-LW::generateGateSchematic $LW::withBuffers "sr_latch"
+LW::generateGateSchematic {
+    module srlatch
+    withBuffers yes
+}
 
 set registerModules {
     "register"
@@ -14,9 +17,12 @@ set registerModules {
 }
 
 foreach module $registerModules {
-    LW::generateGateSchematic $LW::withBuffers $moduleName {
-        { N 4 }
-        { N 8 }
-        { N 16 }
-    }
+    LW::generateGateSchematic [dict create \
+        module $module \
+        params {
+            { N 4 }
+            { N 8 }
+            { N 16 }
+        }
+    ]
 }

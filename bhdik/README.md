@@ -36,3 +36,13 @@ zceg = Flags nibble (zero, carry, a == b, a > b)
 | ____1100          | flags = 0000                            | Clear flags                              |
 | bbdi1110          | if (i) b = per(i, d) else per(i, d) = b | Send or receive data from peripheral bus |
 
+
+# Console screen
+
+## characters
+All printable chars match the ascii standard but control chars are redefined.
+
+| Hex  | Bin      | Symbol | Description  |
+|------|----------|--------|--------------|
+| 0x0A | 00001010 | NL     | New line     |
+| 0x03 | 00000011 | CL     | Clear screen |

@@ -1,70 +1,101 @@
+/* https://github.com/brabect1/sta_basics_course/blob/1a4523efc6bc198a0cfc35b215a5d59bb5144166/src/prime_time/sample_lib1.lib */
+
+
 library(logicworld) {
-    technology (logicworld);
-    delay_model: generic_cmos;
+    /* general attributes */
+    technology (cmos);
+    delay_model: table_lookup;
 
-	/* unit attributes */
-	time_unit						: "1ns";
-	voltage_unit					: "1V";
-	current_unit					: "1uA";
-	pulling_resistance_unit			: "1kohm";
-	leakage_power_unit				: "1nW";
-	capacitive_load_unit (1,pf);
+    /* units attributes*/
+    time_unit: "1ns";
+    voltage_unit: "1V";
+    current_unit: "1mA";
+    pulling_resistance_unit: "1ohm";
+    leakage_power_unit: "1nW";
+    capacitive_load_unit (1,pf);
 
-	/* Default Attributes */
-	default_intrinsic_fall			: 1;
-	default_inout_pin_fall_res		: 1;
-	default_fanout_load				: 1;
-	default_intrinsic_rise			: 1;
-	default_slope_rise				: 1;
-	default_output_pin_fall_res		: 1;
-	default_inout_pin_cap			: 1;
-	default_input_pin_cap			: 1;
-	default_slope_fall				: 1;
-	default_inout_pin_rise_res		: 1;
-	default_output_pin_cap			: 1;
-	default_output_pin_rise_res		: 1;
+    /* thresholds */
+    slew_upper_threshold_pct_rise: 80;
+    slew_lower_threshold_pct_rise: 20;
+    slew_upper_threshold_pct_fall: 80;
+    slew_lower_threshold_pct_fall: 20;
+    input_threshold_pct_rise: 50;
+    input_threshold_pct_fall: 50;
+    output_threshold_pct_rise: 50;
+    output_threshold_pct_fall: 50;
 
+    /* process attributes */
+    nom_process: 1.0;
+    nom_voltage: 1.5;
+    nom_temperature: 25.0;
+    operating_conditions (tc_1p5v_25c) {
+        process: 1;
+        voltage: 1.5;
+        temperature: 25;
+    }
+    default_operating_conditions : tc_1p5v_25c;
 
-	/* Threshold definitions */
-	slew_derate_from_library		: 0.0;
-	slew_lower_threshold_pct_fall	: 50.0;
-	slew_upper_threshold_pct_fall	: 50.0;
-	slew_lower_threshold_pct_rise	: 50.0;
-	slew_upper_threshold_pct_rise	: 50.0;
+    /* default attributes */
+    default_input_pin_cap: 1.0;
+    default_inout_pin_cap: 1.0;
+    default_output_pin_cap: 1.0;
+    default_fanout_load: 1.0;
+    default_max_transition: 1.0;
+    default_cell_leakage_power: 0.0;
+    default_leakage_power_density: 0.0;
 
-	output_threshold_pct_fall		: 50.0;
-	input_threshold_pct_fall		: 50.0;
-	output_threshold_pct_rise		: 50.0;
-	input_threshold_pct_rise		: 50.0;
 
 
     cell(BUF) {
         area: 1;
+        cell_leakage_power: 0.1;
         pin(A) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(Y) {
             direction: output;
+            max_capacitance: 0.05;
             function: "A";
+            timing () {
+				related_pin        : "A" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
         }
     }
     cell(NOT) {
         area: 1;
+        cell_leakage_power: 0.1;
         pin(A) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(Y) {
             direction: output;
+            max_capacitance: 0.05;
             function: "A'";
+            timing () {
+				related_pin        : "A" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
         }
     }
     cell(AND) {
         area: 1;
+        cell_leakage_power: 0.1;
         pin(A) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(B) {
             direction : input;
@@ -72,111 +103,256 @@ library(logicworld) {
         }
         pin(Y) {
             direction: output;
+            max_capacitance: 0.05;
             function: "A*B";
+			timing () {
+				related_pin        : "A" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
+			timing () {
+				related_pin        : "B" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
         }
     }
-
-    /*cell(AND3) {
-        area: 1.5;
+    cell(AND3) {
+        area: 3;
+        cell_leakage_power: 0.1;
         pin(A) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(B) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(C) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(Y) {
             direction: output;
+            max_capacitance: 0.05;
             function: "A*B*C";
+			timing () {
+				related_pin        : "A" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
+			timing () {
+				related_pin        : "B" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
+			timing () {
+				related_pin        : "C" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
         }
-    }*/
-
+    }
     cell(AND4) {
         area: 2;
+        cell_leakage_power: 0.1;
         pin(A) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(B) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(C) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(D) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(Y) {
             direction: output;
+            max_capacitance: 0.05;
             function: "A*B*C*D";
+            timing () {
+				related_pin        : "A" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
+			timing () {
+				related_pin        : "B" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
+			timing () {
+				related_pin        : "C" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
+			timing () {
+				related_pin        : "D" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
         }
     }
     cell(NAND) {
         area: 1;
+        cell_leakage_power: 0.1;
         pin(A) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(B) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(Y) {
             direction: output;
+            max_capacitance: 0.05;
             function: "(A*B)'";
+			timing () {
+				related_pin        : "A" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
+			timing () {
+				related_pin        : "B" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
         }
     }
     cell(NOR) {
         area: 1;
+        cell_leakage_power: 0.1;
         pin(A) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(B) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(Y) {
             direction: output;
+            max_capacitance: 0.05;
             function: "(A+B)'";
+			timing () {
+				related_pin        : "A" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
+			timing () {
+				related_pin        : "B" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
         }
     }
     cell(OR) {
         area: 1;
+        cell_leakage_power: 0.1;
         pin(A) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(B) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(Y) {
             direction: output;
+            max_capacitance: 0.05;
             function: "A+B";
+			timing () {
+				related_pin        : "A" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
+			timing () {
+				related_pin        : "B" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
         }
     }
     /*cell(OR3) {
         area: .5;
+        cell_leakage_power: 0.1;
         pin(A) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(B) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(C) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(Y) {
             direction: output;
@@ -186,21 +362,22 @@ library(logicworld) {
 
     cell(OR4) {
         area: .5;
+        cell_leakage_power: 0.1;
         pin(A) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(B) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(C) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(D) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(Y) {
             direction: output;
@@ -210,33 +387,73 @@ library(logicworld) {
 
     cell(XOR) {
         area: 1;
+        cell_leakage_power: 0.1;
         pin(A) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(B) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(Y) {
             direction: output;
+            max_capacitance: 0.05;
             function: "A^B";
+			timing () {
+				related_pin        : "A" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
+			timing () {
+				related_pin        : "B" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
         }
     }
 
     cell(XNOR) {
         area: 1;
+        cell_leakage_power: 0.1;
         pin(A) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(B) {
             direction: input;
-            capacitance: 0;
+            capacitance: 0.001;
         }
         pin(Y) {
             direction: output;
+            max_capacitance: 0.05;
             function: "(A^B)'";
+			timing () {
+				related_pin        : "A" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
+			timing () {
+				related_pin        : "B" ;
+				timing_type        : combinational ;
+				timing_sense       : negative_unate ;
+				cell_fall(scalar) { values("2.0"); }
+				cell_rise(scalar) { values("2.0"); }
+				fall_transition(scalar) { values("0.3"); }
+				rise_transition(scalar) { values("0.3"); }
+			}
         }
     }
 

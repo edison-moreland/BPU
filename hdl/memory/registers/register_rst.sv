@@ -1,4 +1,4 @@
-module register_reset #(
+module register_rst #(
     parameter N = 3
 ) (
     input  logic         write, read, rst,

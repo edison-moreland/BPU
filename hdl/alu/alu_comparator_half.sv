@@ -1,5 +1,3 @@
-//visualization: netlistsvg
-
 `include "comparator.sv"
 
 module alu_comparator_half (
@@ -9,12 +7,12 @@ module alu_comparator_half (
 );
 
     logic internal_eq, internal_greater;
-    comparator #(4) comp(
-        .a(a), .b(b),
-        .prev_eq(prev_eq),
-        .prev_greater(prev_greater),
-        .eq(internal_eq), .greater(internal_greater)
-    );
+    // comparator #(4) comp(
+    //     .a(a), .b(b),
+    //     .prev_eq(prev_eq),
+    //     .prev_greater(prev_greater),
+    //     .eq(internal_eq), .greater(internal_greater)
+    // );
 
     assign eq = internal_eq;
     assign greater = internal_greater;

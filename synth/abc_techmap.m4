@@ -14,10 +14,20 @@ area_opt
 
 &put;
 
-mfs3 -v -es;
+#mfs3 -v -es;
+
+# Timing optimixation
+topo;
+buffer;
+stime;
+upsize;
+dnsize;
+stime -p;
 topo;
 
-ifdef(`insert-buffers', `addbuffs;', `')
+ifdef(`insert-buffers',
+      `addbuffs;',
+      `')
 
 print_stats -m;
 

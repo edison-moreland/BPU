@@ -1,19 +1,20 @@
-module microop_counter(
-    input logic clk, inst_done,
-    output logic [0:2] count,
-);
-    logic should_rst = 0;
-    always_ff @(posedge clk, posedge inst_done) begin
-        unique if (inst_done)
-            should_rst <= 1;
-        else if (clk) begin
-            if (should_rst) begin
-                count <= 0;
-                should_rst <= 0;
-            end
-            else
-                count <= count + 1;
-        end
-    end
+`include "inc_rst.sv"
 
+module microop_counter #(
+    N = 3
+) (
+    input logic clk, inst_done,
+    output logic [N-1:0] count,
+);
+
+    logic [N-1:0] next_count;
+
+    inc_rst #(N) ir(
+        .rst(inst_done),
+        .din(count), .dout(next_count)
+    );
+
+    always_ff @(negedge clk) begin
+        count <= next_count;
+    end
 endmodule

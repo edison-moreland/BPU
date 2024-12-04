@@ -77,6 +77,23 @@ func main() {
 				}
 
 				programOffset = offset
+			case "DATA":
+				if len(args) != 1 {
+					exitE(errors.New("DATA directive requires one argument"))
+				}
+
+				data, _ := immediateArg(args[0])
+				if data > 0xFF {
+					exitE(fmt.Errorf("DATA too large: %d", data))
+				}
+
+				if hasLabel {
+					// a label precedes this data
+					dataLocation := len(program)
+					labelLocation[instLabel] = dataLocation
+					hasLabel = false
+				}
+				program = append(program, byte(data))
 			}
 
 			continue
@@ -138,9 +155,9 @@ func main() {
 
 	// Print program
 	fmt.Println("---")
-	fmt.Println("Address         | Data")
+	fmt.Println("| Addr | Data")
 	for i, b := range program {
-		fmt.Printf("0x%02x 0b%08b | 0x%02x 0b%08b\n", i+programOffset, i+programOffset, b, b)
+		fmt.Printf("| 0x%02X | 0b%08b\n", i+programOffset, b)
 	}
 }
 

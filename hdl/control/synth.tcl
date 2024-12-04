@@ -6,6 +6,7 @@ LW::loadVerilogSources
 
 set modules {
     "microop_counter"
+    "inc_rst"
 }
 
 foreach module $modules {
