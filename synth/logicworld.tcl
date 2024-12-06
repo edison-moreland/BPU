@@ -165,7 +165,7 @@ namespace eval ::LW {
     proc prepareABCScript {insertBuffers} {
         set abcTechmapNew [file join $v::outputDir "../abc_techmap"]
         set defines {}
-        if {$insertBuffers == 1} {
+        if {$insertBuffers} {
             set abcTechmapNew "${abcTechmapNew}_with_buffers"
             dict set defines insert-buffers 1
         }
