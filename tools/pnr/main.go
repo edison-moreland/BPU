@@ -39,13 +39,14 @@ func main() {
 			cell.Attributes["pnr_cell"] = strconv.Itoa(j)
 		}
 	}
+	top.Attributes["has_pnr"] = "00000000000000000000000000000001"
 
 	newNetlistRaw, err := netlist.MarshalNetlist(nt)
 	if err != nil {
 		panic(err)
 	}
 
-	_, err = os.Stdout.Write(newNetlistRaw)
+	err = os.WriteFile(os.Args[2], newNetlistRaw, 0644)
 	if err != nil {
 		panic(err)
 	}
