@@ -11,7 +11,7 @@ import (
 const nodeSize = 10
 const nodeDistance = 60
 const aspectRatio = 0.5
-const maxSteps = 9_9999
+const maxSteps = 99_9999
 
 type annealingOptimizer struct {
 }

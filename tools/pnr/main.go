@@ -6,6 +6,7 @@ import (
 	"os"
 	"pnr/netlist"
 	"strconv"
+	"strings"
 )
 
 func main() {
@@ -30,6 +31,7 @@ func main() {
 	newLayers := opt.Optimize(ng)
 
 	// Update nt with attributes for positions
+	maxLayerWidth := 0
 	for i, layer := range newLayers {
 		for j, cellId := range layer {
 			cellName := cellMap[cellId]
@@ -38,15 +40,20 @@ func main() {
 			cell.Attributes["pnr_layer"] = strconv.Itoa(i)
 			cell.Attributes["pnr_cell"] = strconv.Itoa(j)
 		}
+		maxLayerWidth = max(maxLayerWidth, len(layer))
 	}
 	top.Attributes["has_pnr"] = "00000000000000000000000000000001"
+	top.Attributes["pnr_layer_count"] = strconv.Itoa(len(newLayers))
+	top.Attributes["pnr_max_layer_width"] = strconv.Itoa(maxLayerWidth)
 
 	newNetlistRaw, err := netlist.MarshalNetlist(nt)
 	if err != nil {
 		panic(err)
 	}
 
-	err = os.WriteFile(os.Args[2], newNetlistRaw, 0644)
+	outputFilename := strings.TrimSuffix(os.Args[1], ".json") + "_pnr.json"
+
+	err = os.WriteFile(outputFilename, newNetlistRaw, 0644)
 	if err != nil {
 		panic(err)
 	}
