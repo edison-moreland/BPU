@@ -1,0 +1,1084 @@
+{
+  "creator": "Yosys 0.46 (git sha1 e97731b9d, clang++ 16.0.0 -fPIC -O3)",
+  "modules": {
+    "AND": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "B": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "Y": {
+          "direction": "output",
+          "bits": [ 4 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+          }
+        },
+        "B": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+          }
+        },
+        "Y": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+          }
+        }
+      }
+    },
+    "AND3": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "B": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "C": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "Y": {
+          "direction": "output",
+          "bits": [ 5 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+          }
+        },
+        "B": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+          }
+        },
+        "C": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+          }
+        },
+        "Y": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+          }
+        }
+      }
+    },
+    "AND4": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "B": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "C": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "D": {
+          "direction": "input",
+          "bits": [ 5 ]
+        },
+        "Y": {
+          "direction": "output",
+          "bits": [ 6 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+          }
+        },
+        "B": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+          }
+        },
+        "C": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+          }
+        },
+        "D": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+          }
+        },
+        "Y": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+          }
+        }
+      }
+    },
+    "BUF": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "Y": {
+          "direction": "output",
+          "bits": [ 3 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+          }
+        },
+        "Y": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+          }
+        }
+      }
+    },
+    "DLATCH": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "D": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "E": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "Q": {
+          "direction": "output",
+          "bits": [ 4 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "D": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+          }
+        },
+        "E": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+          }
+        },
+        "Q": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+          }
+        }
+      }
+    },
+    "NAND": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "B": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "Y": {
+          "direction": "output",
+          "bits": [ 4 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+          }
+        },
+        "B": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+          }
+        },
+        "Y": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+          }
+        }
+      }
+    },
+    "NOR": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "B": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "Y": {
+          "direction": "output",
+          "bits": [ 4 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+          }
+        },
+        "B": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+          }
+        },
+        "Y": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+          }
+        }
+      }
+    },
+    "NOT": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "Y": {
+          "direction": "output",
+          "bits": [ 3 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+          }
+        },
+        "Y": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+          }
+        }
+      }
+    },
+    "OR": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "B": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "Y": {
+          "direction": "output",
+          "bits": [ 4 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+          }
+        },
+        "B": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+          }
+        },
+        "Y": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+          }
+        }
+      }
+    },
+    "XNOR": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "B": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "Y": {
+          "direction": "output",
+          "bits": [ 4 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+          }
+        },
+        "B": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+          }
+        },
+        "Y": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+          }
+        }
+      }
+    },
+    "XOR": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "B": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "Y": {
+          "direction": "output",
+          "bits": [ 4 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+          }
+        },
+        "B": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+          }
+        },
+        "Y": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+          }
+        }
+      }
+    },
+    "register": {
+      "attributes": {
+        "hdlname": "register",
+        "dynports": "00000000000000000000000000000001",
+        "top": "00000000000000000000000000000001",
+        "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:1.1-26.10"
+      },
+      "parameter_default_values": {
+        "N": "00000000000000000000000000001000"
+      },
+      "ports": {
+        "write": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "read": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "data_in": {
+          "direction": "input",
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11 ]
+        },
+        "data_out": {
+          "direction": "output",
+          "bits": [ 12, 13, 14, 15, 16, 17, 18, 19 ]
+        }
+      },
+      "cells": {
+        "$abc$247$auto$blifparse.cc:396:parse_blif$248": {
+          "hide_name": 1,
+          "type": "AND",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ 20 ],
+            "Y": [ 12 ]
+          }
+        },
+        "$abc$247$auto$blifparse.cc:396:parse_blif$249": {
+          "hide_name": 1,
+          "type": "AND",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ 21 ],
+            "Y": [ 13 ]
+          }
+        },
+        "$abc$247$auto$blifparse.cc:396:parse_blif$250": {
+          "hide_name": 1,
+          "type": "AND",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ 22 ],
+            "Y": [ 14 ]
+          }
+        },
+        "$abc$247$auto$blifparse.cc:396:parse_blif$251": {
+          "hide_name": 1,
+          "type": "AND",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ 23 ],
+            "Y": [ 15 ]
+          }
+        },
+        "$abc$247$auto$blifparse.cc:396:parse_blif$252": {
+          "hide_name": 1,
+          "type": "AND",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ 24 ],
+            "Y": [ 16 ]
+          }
+        },
+        "$abc$247$auto$blifparse.cc:396:parse_blif$253": {
+          "hide_name": 1,
+          "type": "AND",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ 25 ],
+            "Y": [ 17 ]
+          }
+        },
+        "$abc$247$auto$blifparse.cc:396:parse_blif$254": {
+          "hide_name": 1,
+          "type": "AND",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ 26 ],
+            "Y": [ 18 ]
+          }
+        },
+        "$abc$247$auto$blifparse.cc:396:parse_blif$255": {
+          "hide_name": 1,
+          "type": "AND",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ 27 ],
+            "Y": [ 19 ]
+          }
+        },
+        "$abc$247$auto$blifparse.cc:396:parse_blif$256": {
+          "hide_name": 1,
+          "type": "NOT",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 2 ],
+            "Y": [ 28 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$208.DLP1": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:17.12-17.39"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 4 ],
+            "E": [ 28 ],
+            "Q": [ 29 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$208.DLP2": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:18.12-18.38"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 29 ],
+            "E": [ 2 ],
+            "Q": [ 20 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$209.DLP1": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:17.12-17.39"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 5 ],
+            "E": [ 28 ],
+            "Q": [ 30 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$209.DLP2": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:18.12-18.38"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 30 ],
+            "E": [ 2 ],
+            "Q": [ 21 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$210.DLP1": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:17.12-17.39"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 6 ],
+            "E": [ 28 ],
+            "Q": [ 31 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$210.DLP2": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:18.12-18.38"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 31 ],
+            "E": [ 2 ],
+            "Q": [ 22 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$211.DLP1": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:17.12-17.39"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 7 ],
+            "E": [ 28 ],
+            "Q": [ 32 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$211.DLP2": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:18.12-18.38"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 32 ],
+            "E": [ 2 ],
+            "Q": [ 23 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$212.DLP1": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:17.12-17.39"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 8 ],
+            "E": [ 28 ],
+            "Q": [ 33 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$212.DLP2": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:18.12-18.38"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 33 ],
+            "E": [ 2 ],
+            "Q": [ 24 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$213.DLP1": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:17.12-17.39"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 9 ],
+            "E": [ 28 ],
+            "Q": [ 34 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$213.DLP2": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:18.12-18.38"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 34 ],
+            "E": [ 2 ],
+            "Q": [ 25 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$214.DLP1": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:17.12-17.39"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 10 ],
+            "E": [ 28 ],
+            "Q": [ 35 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$214.DLP2": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:18.12-18.38"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 35 ],
+            "E": [ 2 ],
+            "Q": [ 26 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$215.DLP1": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:17.12-17.39"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 11 ],
+            "E": [ 28 ],
+            "Q": [ 36 ]
+          }
+        },
+        "$auto$ff.cc:266:slice$215.DLP2": {
+          "hide_name": 1,
+          "type": "DLATCH",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:18.12-18.38"
+          },
+          "port_directions": {
+            "D": "input",
+            "E": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 36 ],
+            "E": [ 2 ],
+            "Q": [ 27 ]
+          }
+        }
+      },
+      "netnames": {
+        "$abc$247$techmap$auto$ff.cc:266:slice$208.$not$/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:17$233_Y": {
+          "hide_name": 1,
+          "bits": [ 28 ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:17.20-17.22"
+          }
+        },
+        "$auto$ff.cc:266:slice$208.QQ": {
+          "hide_name": 1,
+          "bits": [ 29 ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:15.10-15.12"
+          }
+        },
+        "$auto$ff.cc:266:slice$209.QQ": {
+          "hide_name": 1,
+          "bits": [ 30 ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:15.10-15.12"
+          }
+        },
+        "$auto$ff.cc:266:slice$210.QQ": {
+          "hide_name": 1,
+          "bits": [ 31 ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:15.10-15.12"
+          }
+        },
+        "$auto$ff.cc:266:slice$211.QQ": {
+          "hide_name": 1,
+          "bits": [ 32 ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:15.10-15.12"
+          }
+        },
+        "$auto$ff.cc:266:slice$212.QQ": {
+          "hide_name": 1,
+          "bits": [ 33 ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:15.10-15.12"
+          }
+        },
+        "$auto$ff.cc:266:slice$213.QQ": {
+          "hide_name": 1,
+          "bits": [ 34 ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:15.10-15.12"
+          }
+        },
+        "$auto$ff.cc:266:slice$214.QQ": {
+          "hide_name": 1,
+          "bits": [ 35 ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:15.10-15.12"
+          }
+        },
+        "$auto$ff.cc:266:slice$215.QQ": {
+          "hide_name": 1,
+          "bits": [ 36 ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:14.2-16.20|/Users/edison/Development/BPU/synth/flipflop2latch_techmap.v:15.10-15.12"
+          }
+        },
+        "_sv2v_0": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:7.6-7.13"
+          }
+        },
+        "data": {
+          "hide_name": 0,
+          "bits": [ 20, 21, 22, 23, 24, 25, 26, 27 ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:13.16-13.20"
+          }
+        },
+        "data_in": {
+          "hide_name": 0,
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11 ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:11.23-11.30"
+          }
+        },
+        "data_out": {
+          "hide_name": 0,
+          "bits": [ 12, 13, 14, 15, 16, 17, 18, 19 ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:12.23-12.31"
+          }
+        },
+        "read": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:10.13-10.17"
+          }
+        },
+        "write": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "/Users/edison/Development/BPU/.out/memory/verilog/registers/register.v:9.13-9.18"
+          }
+        }
+      }
+    }
+  }
+}
