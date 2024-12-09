@@ -9,7 +9,7 @@ namespace eval ::LW {
         variable outputDir $::env(OUTPUT_DIR)
         variable synthDir $::env(SYNTH_DIR)
 
-        variable sourceFiles {tes test}
+        variable sourceFiles {}
 
         variable logicworldLib [file join $synthDir "logicworld.lib"]
         variable memoryTechamp [file join $synthDir "flipflop2latch_techmap.v"]
@@ -107,7 +107,6 @@ namespace eval ::LW {
 
         set abcScript [::LW::prepareABCScript $insertBuffers]
 
-
         foreach parameterSet $moduleParams {
             yosys design -load $moduleName
 
@@ -120,20 +119,48 @@ namespace eval ::LW {
             # The real magic
             ::LW::synthToGates $moduleName $abcScript
 
+            set synthesizedVerilogOutput [::LW::outputPath "verilog_synthesized" "${outputName}.v"]
+            write_verilog $synthesizedVerilogOutput
+
             set netlistOutput [::LW::outputPath "netlists" "${outputName}.json"]
             write_json $netlistOutput
+
 
             set schematicOutput [::LW::outputPath "schematics" "${outputName}.svg"]
             exec netlistsvg $netlistOutput -o $schematicOutput --skin $v::netlistsvgSkin
         }
     }
 
+    proc simulate { { moduleParameters {} } } {
+        set moduleName [dict get $moduleParameters module]
+
+        set moduleSource [dict get $v::sourceFiles $moduleName]
+
+        set verilatorDir [::LW::outputDir "verilator"]
+
+        exec verilator --binary -j 0 --prefix $moduleName --top $moduleName -Mdir $verilatorDir $moduleSource
+
+        set simulationResult [exec [file join $verilatorDir $moduleName]]
+        puts $simulationResult
+
+        if {[regexp {^ASSERTION FAILED} $simulationResult]} {
+            error "Simulation failed"
+        } else {
+            puts "Simulation passed"
+        }
+    }
+
     proc outputPath { folder filename } {
+        set outputDir [::LW::outputDir $folder]
+        return [file join $outputDir $filename]
+    }
+
+    proc outputDir { folder } {
         set outputDir [file join $v::outputDir $folder]
         if {[file exists $outputDir] != 1} {
             file mkdir $outputDir
         }
-        return [file join $outputDir $filename]
+        return $outputDir
     }
 
     proc synthToGates { moduleName abcScript } {
