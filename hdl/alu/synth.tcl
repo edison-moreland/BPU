@@ -4,21 +4,34 @@ source [file join $::env(SYNTH_DIR) "logicworld.tcl"]
 
 LW::loadVerilogSources
 
-set nModules {
-    "full_adder"
-    "comparator"
-}
-foreach nModule $nModules {
-    LW::generateGateSchematic [dict create \
-        module $nModule \
-        withBuffers yes \
-        params {
-            { N 4 }
-            { N 8 }
-        }
-    ]
+
+LW::simulate {
+    module "alu_tb"
 }
 
-foreach module $modules {
-    LW::generateGateSchematic $LW::withBuffers $module
+LW::generateGateSchematic {
+    module "alu"
+    withBuffers yes
+    params {
+        { N 8 }
+    }
+}
+
+LW::generateGateSchematic {
+    module "adder"
+    withBuffers yes
+    params {
+        { N 4 }
+        { N 8 }
+        { N 16 }
+    }
+}
+
+LW::generateGateSchematic {
+    module "multiplier"
+    withBuffers yes
+    params {
+        { N 4 }
+        { N 8 }
+    }
 }
