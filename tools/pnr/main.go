@@ -25,14 +25,13 @@ func main() {
 		panic("Top module not found")
 	}
 
-	ng, _, cellMap := moduleToNodeGraph(top)
+	ng, layout, _, cellMap := moduleToNodeGraph(top)
 
-	opt := NewAnnealingOptimizer()
-	newLayers := opt.Optimize(ng)
+	NewAnnealingOptimizer().Optimize(ng, layout)
 
 	// Update nt with attributes for positions
 	maxLayerWidth := 0
-	for i, layer := range newLayers {
+	for i, layer := range layout.middleNodes {
 		for j, cellId := range layer {
 			cellName := cellMap[cellId]
 			cell := top.Cells[cellName]
@@ -43,7 +42,7 @@ func main() {
 		maxLayerWidth = max(maxLayerWidth, len(layer))
 	}
 	top.Attributes["has_pnr"] = "00000000000000000000000000000001"
-	top.Attributes["pnr_layer_count"] = strconv.Itoa(len(newLayers))
+	top.Attributes["pnr_layer_count"] = strconv.Itoa(len(layout.middleNodes))
 	top.Attributes["pnr_max_layer_width"] = strconv.Itoa(maxLayerWidth)
 
 	newNetlistRaw, err := netlist.MarshalNetlist(nt)
@@ -70,7 +69,7 @@ func findTop(netlist *netlist.Netlist) (string, *netlist.Module, bool) {
 	return "", nil, false
 }
 
-func moduleToNodeGraph(module *netlist.Module) (nodeGraph *NodeGraph, netMap map[NodeIndex]int, cellMap map[NodeIndex]string) {
+func moduleToNodeGraph(module *netlist.Module) (nodeGraph *NodeGraph, layout *Layout, netMap map[NodeId]int, cellMap map[NodeId]string) {
 	// This assumes the netlist is organized in nice layers where all
 	//  the inputs of one layer connect to the outputs of the next
 	//  layer and no other layer. This will be true for a combinational
@@ -155,15 +154,16 @@ func moduleToNodeGraph(module *netlist.Module) (nodeGraph *NodeGraph, netMap map
 	fmt.Printf("%d layers found \n", len(layerCells))
 
 	// Map nodes back to netlist
-	netMap = map[NodeIndex]int{}
-	cellMap = map[NodeIndex]string{}
+	netMap = map[NodeId]int{}
+	cellMap = map[NodeId]string{}
 
-	nodeGraph = NewNodeGraph(len(layerCells))
+	nodeGraph = NewNodeGraph()
+	layout = NewLayout(len(layerCells) + 2)
 
 	// Input layer
-	inputLayerNodes := map[int]NodeIndex{}
+	inputLayerNodes := map[int]NodeId{}
 	for _, net := range inputNets {
-		inputLayerNodes[net] = nodeGraph.AddInputNode()
+		inputLayerNodes[net] = layout.AddInputNode(nodeGraph)
 		netMap[inputLayerNodes[net]] = net
 	}
 
@@ -171,18 +171,18 @@ func moduleToNodeGraph(module *netlist.Module) (nodeGraph *NodeGraph, netMap map
 	layerNodes := inputLayerNodes
 	for i, middleLayer := range layerCells {
 		previousLayerNodes := layerNodes
-		layerNodes = map[int]NodeIndex{}
+		layerNodes = map[int]NodeId{}
 
 		for _, cellName := range middleLayer.ToSlice() {
 			cellInputNets := getCellBits(module.Cells[cellName], netlist.Direction_Input)
 			outputNet := getCellBits(module.Cells[cellName], netlist.Direction_Output)[0]
 
-			cellInputNodes := []NodeIndex{}
+			cellInputNodes := []NodeId{}
 			for _, net := range cellInputNets {
 				cellInputNodes = append(cellInputNodes, previousLayerNodes[net])
 			}
 
-			layerNodes[outputNet] = nodeGraph.AddLayerNode(module.Cells[cellName].Type, LayerIndex(i), cellInputNodes)
+			layerNodes[outputNet] = layout.AddMiddleNode(nodeGraph, module.Cells[cellName].Type, i+1, cellInputNodes)
 			cellMap[layerNodes[outputNet]] = cellName
 		}
 	}
@@ -191,13 +191,13 @@ func moduleToNodeGraph(module *netlist.Module) (nodeGraph *NodeGraph, netMap map
 	for _, net := range outputNets {
 		inputNode := layerNodes[net]
 
-		outputNode := nodeGraph.AddOutputNode([]NodeIndex{inputNode})
+		outputNode := layout.AddOutputNode(nodeGraph, []NodeId{inputNode})
 		netMap[outputNode] = net
 	}
 
 	fmt.Println(nodeGraph.Nodes)
 
-	return nodeGraph, netMap, cellMap
+	return nodeGraph, layout, netMap, cellMap
 }
 
 func getPortBits(module *netlist.Module, direction netlist.Direction) []int {

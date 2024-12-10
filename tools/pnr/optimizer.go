@@ -1,60 +1,175 @@
 package main
 
-import "slices"
+import (
+	rl "github.com/gen2brain/raylib-go/raylib"
+	"slices"
+)
 
-type LayerIndex int
+const nodeWidth = 10
+const nodeDistance = nodeWidth
+const aspectRatio = 0.5 // layerDistance/nodeDistance
 
-type NodeIndex int
-
-type Node struct {
-	Id                  NodeIndex
-	Label               string
-	ForwardConnections  []NodeIndex
-	BackwardConnections []NodeIndex
+type Optimizer interface {
+	// Optimize layout for shortest connection distance
+	Optimize(graph *NodeGraph, layout *Layout)
 }
 
-type NodeGraph struct {
+type LayoutIndex struct {
+	layer int // front to back
+	x     int // left to right
+	y     int // bottom to top
+}
+
+type Layout struct {
 	// In these arrays, nodes are stored from left to right
-	InputNodes  []NodeIndex
-	OutputNodes []NodeIndex
+	inputNodes  []NodeId
+	outputNodes []NodeId
 
-	// Layers are stored from input to output, nodes within layers are stored from left to right
-	Layers [][]NodeIndex
+	// middleNodes are stored from input to output
+	middleNodes [][]NodeId
 
-	Nodes []Node
+	layerCount int
+
+	circuitWidth  int
+	nodePositions [][][]rl.Vector3 // [layer][y][x]
 }
 
-func NewNodeGraph(layers int) *NodeGraph {
-	return &NodeGraph{
-		InputNodes:  []NodeIndex{},
-		OutputNodes: []NodeIndex{},
-		Layers:      make([][]NodeIndex, layers),
-		Nodes:       []Node{},
+func NewLayout(layers int) *Layout {
+	return &Layout{
+		inputNodes:  []NodeId{},
+		outputNodes: []NodeId{},
+		middleNodes: make([][]NodeId, layers-1),
+		layerCount:  layers,
+		//	nodePositions intentionally left nil, it will be calculated lazily
 	}
 }
 
-func (ng *NodeGraph) AddInputNode() NodeIndex {
-	nodeId := ng.addNode("", []NodeIndex{})
-	ng.InputNodes = append(ng.InputNodes, nodeId)
+func (l *Layout) calculateNodePositions() {
+	nodePositions := make([][][]rl.Vector3, l.layerCount)
+	layerDistance := float32(nodeDistance) * aspectRatio
+
+	for layerIdx := 0; layerIdx < l.layerCount; layerIdx++ {
+		layer := l.getLayer(layerIdx)
+		layerNodeCount := len(layer)
+		layerWidth := min(l.circuitWidth, layerNodeCount)
+
+		layerPositions := [][]rl.Vector3{}
+		for i := 0; i < layerNodeCount; i++ {
+			x := i % layerWidth
+			y := i / layerWidth
+
+			//LayoutIndex{layerIdx, x, y}
+
+			position := rl.NewVector3(
+				float32(layerIdx)*layerDistance,  // front to back
+				float32(y)*float32(nodeDistance), // up down
+				float32(x)*float32(nodeDistance), // side to side
+			)
+
+			if len(layerPositions)-1 < 0 {
+				layerPositions = append(layerPositions, []rl.Vector3{})
+			}
+			layerPositions[y] = append(layerPositions[y], position)
+
+			if layerPositions[y][x] != position {
+				panic("Uh oh!!")
+			}
+		}
+		nodePositions[layerIdx] = layerPositions
+	}
+	l.nodePositions = nodePositions
+}
+
+func (l *Layout) forEachLayer(f func([]NodeId)) {
+	f(l.inputNodes)
+	for _, layer := range l.middleNodes {
+		f(layer)
+	}
+	f(l.outputNodes)
+}
+
+func (l *Layout) getLayer(layer int) []NodeId {
+	switch layer {
+	case 0:
+		return l.inputNodes
+	case l.layerCount - 1:
+		return l.outputNodes
+	default:
+		return l.middleNodes[layer-1]
+	}
+}
+
+func (l *Layout) GetNodePosition(idx LayoutIndex) rl.Vector3 {
+	if l.nodePositions == nil {
+		l.calculateNodePositions()
+	}
+
+	return l.nodePositions[idx.layer][idx.y][idx.x]
+}
+
+func (l *Layout) LayerWidth(layer int) int {
+	return min(l.circuitWidth, len(l.getLayer(layer)))
+}
+
+func (l *Layout) ForEachNode(f func(LayoutIndex, NodeId)) {
+	for layerIdx := 0; layerIdx < l.layerCount; layerIdx++ {
+		layer := l.getLayer(layerIdx)
+		layerNodeCount := len(layer)
+		layerWidth := min(l.circuitWidth, layerNodeCount)
+
+		for i := 0; i < layerNodeCount; i++ {
+			x := i % layerWidth
+			y := i / layerWidth
+
+			f(LayoutIndex{layerIdx, x, y}, layer[i])
+		}
+
+	}
+}
+
+func (l *Layout) AddInputNode(ng *NodeGraph) NodeId {
+	nodeId := ng.addNode("", []NodeId{})
+	l.inputNodes = append(l.inputNodes, nodeId)
+	l.circuitWidth = max(len(l.inputNodes), len(l.outputNodes))
 	return nodeId
 }
 
-// AddLayerNode puts a new node in a layer
-func (ng *NodeGraph) AddLayerNode(label string, layer LayerIndex, backwardConnections []NodeIndex) NodeIndex {
+// AddMiddleNode puts a new node in a layer
+func (l *Layout) AddMiddleNode(ng *NodeGraph, label string, layer int, backwardConnections []NodeId) NodeId {
 	nodeId := ng.addNode(label, backwardConnections)
-	ng.Layers[layer] = append(ng.Layers[layer], nodeId)
+	l.middleNodes[layer] = append(l.middleNodes[layer-1], nodeId)
 	return nodeId
 }
 
-func (ng *NodeGraph) AddOutputNode(backwardConnections []NodeIndex) NodeIndex {
+func (l *Layout) AddOutputNode(ng *NodeGraph, backwardConnections []NodeId) NodeId {
 	nodeId := ng.addNode("", backwardConnections)
-	ng.OutputNodes = append(ng.OutputNodes, nodeId)
+	l.outputNodes = append(l.outputNodes, nodeId)
+	l.circuitWidth = max(len(l.inputNodes), len(l.outputNodes))
 	return nodeId
 }
 
-func (ng *NodeGraph) addNode(label string, backwardConnections []NodeIndex) NodeIndex {
-	nodeId := NodeIndex(len(ng.Nodes))
-	node := Node{Id: nodeId, Label: label, ForwardConnections: []NodeIndex{}, BackwardConnections: backwardConnections}
+type NodeId int
+
+type Node struct {
+	Id                  NodeId
+	Label               string
+	ForwardConnections  []NodeId
+	BackwardConnections []NodeId
+}
+
+type NodeGraph struct {
+	Nodes []Node
+}
+
+func NewNodeGraph() *NodeGraph {
+	return &NodeGraph{
+		Nodes: []Node{},
+	}
+}
+
+func (ng *NodeGraph) addNode(label string, backwardConnections []NodeId) NodeId {
+	nodeId := NodeId(len(ng.Nodes))
+	node := Node{Id: nodeId, Label: label, ForwardConnections: []NodeId{}, BackwardConnections: backwardConnections}
 	ng.Nodes = append(ng.Nodes, node)
 
 	if len(backwardConnections) != 0 {
@@ -67,9 +182,4 @@ func (ng *NodeGraph) addNode(label string, backwardConnections []NodeIndex) Node
 	}
 
 	return nodeId
-}
-
-type Optimizer interface {
-	// Optimize inner layers for shortest connection distance
-	Optimize(graph *NodeGraph) [][]NodeIndex
 }
