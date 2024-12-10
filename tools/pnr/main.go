@@ -195,7 +195,7 @@ func moduleToNodeGraph(module *netlist.Module) (nodeGraph *NodeGraph, layout *La
 		netMap[outputNode] = net
 	}
 
-	fmt.Println(nodeGraph.Nodes)
+	fmt.Println(nodeGraph.nodes)
 
 	return nodeGraph, layout, netMap, cellMap
 }
